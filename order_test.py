@@ -9,13 +9,15 @@ from pypdf import PdfWriter
 from pypdf import PaperSize
 
 from pdfnup import generateNup
+from pdfnup import _mtA4Pdf
 
 input_file = pathlib.Path("test_page.pdf")
 page_file_w_empty = pathlib.Path("midtle_page.pdf")
 ordered_file = pathlib.Path("ordered_pages.pdf")
 output_file = pathlib.Path("test_output.pdf")
 
-empty_page = pathlib.Path('latex/empty_page.pdf')
+empty_page = io.BytesIO(_mtA4Pdf)
+# empty_page = pathlib.Path('latex/empty_page.pdf')
 
 page_count: int = 0
 page_per_section: int = 5
