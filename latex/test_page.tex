@@ -1,0 +1,17 @@
+\documentclass{article}
+\usepackage{pgffor}
+\usepackage{lmodern}
+
+\begin{document}
+
+\foreach \pp in {1,...,50}{
+    \begin{center}  
+        \vspace*{\fill}
+        \pagenumbering{gobble}
+        \hspace*{-2cm}{\fontsize{500}{600}\selectfont \pp}
+        \vspace*{\fill}
+    \end{center}
+    \newpage
+}
+
+\end{document}
