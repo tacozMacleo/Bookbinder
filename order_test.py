@@ -17,7 +17,6 @@ ordered_file = pathlib.Path("ordered_pages.pdf")
 output_file = pathlib.Path("test_output.pdf")
 
 empty_page = io.BytesIO(_mtA4Pdf)
-# empty_page = pathlib.Path('latex/empty_page.pdf')
 
 page_count: int = 0
 page_per_section: int = 5
