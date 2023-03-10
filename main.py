@@ -43,6 +43,8 @@ def generate_page_order(
     page_count: int,
     section_count: int
 ) -> list[int]:
+    # Right Order. But the even pages need to be roteted 180 degs.
+    # Which mens that the order for even pages also need to be swaped.
     r_list = []
     for each_section in batched(range(page_count), section_count*4):
         while each_section:
