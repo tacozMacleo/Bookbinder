@@ -1,1 +1,2 @@
 pypdf==3.3.0 
+git+https://github.com/tacozMacleo/pdfnup.git@develop
