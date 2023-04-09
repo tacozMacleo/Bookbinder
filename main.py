@@ -7,11 +7,11 @@ import pathlib
 
 from itertools import islice
 
-from pypdf import PdfReader
+from pypdf import PdfReader  # type: ignore
 from pypdf import PdfWriter
 from pypdf import PaperSize
 
-from pdfnup import generateNup
+from pdfnup import generateNup  # type: ignore
 from pdfnup import _mtA4Pdf
 
 
@@ -156,6 +156,10 @@ if __name__ == "__main__":
     folds: int = 2
 
     args = parser.parse_args()
+
+    if not args.src.exists():
+        print('Could not find the source file...')
+        exit()
 
     page_w_empty_pages, page_count = add_empty_pages_to_fit_section_count(
         input_file=args.src,
