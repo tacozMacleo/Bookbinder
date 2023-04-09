@@ -44,13 +44,42 @@ def generate_page_order(
     section_count: int
 ) -> list[int]:
     # Right Order. But the even pages need to be roteted 180 degs.
-    # Which mens that the order for even pages also need to be swaped.
     r_list = []
     for each_section in batched(range(page_count), section_count*4):
         while each_section:
             r_list.append(each_section.pop())
             r_list.append(each_section.pop(0))
     return r_list
+
+
+def order_pages(
+    file: io.BytesIO,
+    section_count: int,
+) -> io.BytesIO:
+    # WIP: Should mix 'load_page_order' & 'generate_page_order'.
+    # Right Order. But the even pages need to be roteted 180 degs.
+    pdf_reader = PdfReader(file)
+    page_count: int = len(pdf_reader.pages)
+    pdf_writer = PdfWriter()
+
+    for each_section in batched(range(page_count), section_count*4):
+        for x in range((len(each_section)+1) // 2):
+            first_page = each_section.pop()
+            last_page = each_section.pop(0)
+            if x % 2 != 0:
+                pdf_writer.add_page(pdf_reader.pages[first_page].rotate(180))
+                pdf_writer.add_page(pdf_reader.pages[last_page].rotate(180))
+                continue
+
+            pdf_writer.add_page(pdf_reader.pages[first_page])
+            pdf_writer.add_page(pdf_reader.pages[last_page])
+
+    ordered_page = io.BytesIO()
+
+    pdf_writer.write(ordered_page)
+    pdf_writer.close()
+    ordered_page.seek(0)
+    return ordered_page
 
 
 def add_empty_pages_to_fit_section_count(
@@ -75,7 +104,10 @@ def add_empty_pages_to_fit_section_count(
         return page_w_empty_pages, page_count + empty_page_count
 
 
-def order_pages(file: io.BytesIO, the_order: list[int]) -> io.BytesIO:
+def load_order_pages(
+    file: io.BytesIO,
+    the_order: list[int]
+) -> io.BytesIO:
     merger = PdfWriter()
     merger.append(file, pages=the_order)
     page_ordered = io.BytesIO()
@@ -107,7 +139,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '-s', '--section',
         type=int,
-        help="The page Count for a section."
+        help="The folded page Count for a section."
     )
 
     parser.add_argument(
@@ -130,14 +162,19 @@ if __name__ == "__main__":
         section_count=args.section,
     )
 
-    the_order = generate_page_order(
-        page_count=page_count,
-        section_count=args.section,
-    )
+    # the_order = generate_page_order(
+    #     page_count=page_count,
+    #     section_count=args.section,
+    # )
 
     ordered_file = order_pages(
         file=page_w_empty_pages,
-        the_order=the_order,
+        section_count=args.section,
     )
+
+    # ordered_file = load_order_pages(
+    #     file=page_w_empty_pages,
+    #     the_order=the_order,
+    # )
 
     generateNup(ordered_file, folds, str(args.out))
