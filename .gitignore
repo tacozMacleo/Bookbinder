@@ -132,3 +132,6 @@ dmypy.json
 *.aux
 *.log
 *.pdf
+
+# VSCode Workspace
+*.code-workspace
